@@ -12,12 +12,12 @@
            }
 
            
-           .todo_author_info, #todo_author, #todo_author_email, #todo_status{
+           .todo_author_info, #todo_author, #todo_author_email, #todo_status, #todo_id{
                 display: flex;
            }
            
            
-           #todo_author_text, .todo_container, #todo_author, #todo_author_email, #todo_status, input{
+           #todo_author_text, .todo_container, #todo_author, #todo_author_email, #todo_status, #todo_id, input{
                 padding: 10px;
                 margin: 5px;
            }
@@ -54,25 +54,47 @@
         
             <?php
             
-                for($i = 0; $i < 3; $i++){
+                // Printing my database
+                $servername   = "rudy.zzz.com.ua";
+                $login        = "starlightnova";
+                $password     = "Admin123";
+                $db           = 'starlightnova';
+                
+                $conn = new mysqli($servername, $login, $password, $db);
+                
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                
+                $sql = "SELECT id, name, email, content FROM todos";
+                $result = $conn->query($sql);
+                
+                if ($result->num_rows > 0) {
+                  while($row = $result->fetch_assoc()) {
                     echo '<div class = "todo_container" style="border: 0.5px solid grey;">';
                         echo '<div class = "todo_author_info">';
-                            echo '<div id = "todo_author">' . ' John';
+                            echo '<div id = "todo_author">' . $row['name'];
                             
                             echo '</div>';
-                            echo '<div id = "todo_author_email">' . ' test@test.com';
+                            echo '<div id = "todo_author_email">' . $row['email'];
+                            echo '</div>';
+                             echo '<div id = "todo_id">' . $row['id'];
                             echo '</div>';
                             echo '<div id = "todo_status">' . ' in progress';
                             echo '</div>';
                         echo '</div>';
                         
-                        echo '<div id = "todo_author_text">' . ' hello my friends I want to improve my skills test test test teset.';
+                        echo '<div id = "todo_author_text">' . $row['content'];
                             
                         echo '</div>';
                         
                     echo '</div>';
-                 }
-            
+                  }
+                } else {
+                  echo "0 results";
+                }
+                $conn->close();
+
             ?>
             
            <!-- 
@@ -94,6 +116,7 @@
                 </div>
             </div> 
             -->
+            
         </div>
         
     </body>

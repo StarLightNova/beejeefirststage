@@ -35,11 +35,74 @@
     
         <!-- Main title box -->
         <div id = "Main_Title"> 
-            <h1>Online TODO List</h1>
+            <h1 id = 'main_title_first'>Online TODO List</h1>
             <div id = "Description_After_Main_Title">
                 <h5>In this webpage you can make online TODO list with other participants.<h5>
             </div>
+            
+            <form method='post' action='index.php'>
+                <input type="text" placeholder = "admin login" name = "admin_login">
+                <input type="password" placeholder = "password" name = "admin_password">
+                <input type="submit" value = "log in" name = 'admin_enter'>
+            </form>
         </div>
+        
+        <?php
+            if(isset($_POST['admin_enter'])){
+                if(empty($POST['admin_login']) && empty($_POST['admin_password'])){
+                    echo "Incorrect!";
+                }
+                else{
+                    
+               
+                    $admin = $_POST['admin_login'];
+                    $pass  = $_POST['admin_password'];
+                        
+                    if(strcmp($admin, "Admin") == 0 && strcmp($pass, "123") == 0){
+                        echo "<script> document.getElementById('main_title_first').innerHTML = 'Online TODO List[ADMIN]' </script>";
+                        
+                        echo "<form method='post' action='index.php'>";
+                        echo "<input type = 'text' placeholder='ID' name='change_id'>";
+                        echo "<input type = 'text' placeholder='content' name='change_content'>";
+                        echo "<input type = 'text' placeholder='progress' name='change_progress'>";
+                        echo "<input type = 'submit' value='change' name='changes'>";
+                        echo "</form'>";
+                    }
+                }
+                
+                
+            }
+        ?>
+        
+        <?php
+             if(isset($_POST['changes'])){
+                        $c_ID = $_POST['change_id'];
+                        $c_c = $_POST['change_content'];
+                        $c_p = $_POST['change_progress'];
+                        if(empty($c_ID) || empty($c_c) || empty($c_p)){
+                            echo "Incorrect!";
+                        }
+                        else{
+                            $conn= new mysqli("rudy.zzz.com.ua","starlightnova","Admin123","starlightnova");
+                            
+                            if ($conn->connect_error) {
+                              die("Connection failed: " . $conn->connect_error);
+                            }
+
+                            $sql = "UPDATE `todos` SET `content`= '$c_c' , `progress` = '$c_p' WHERE id = $c_ID";
+                            
+                            
+                            if ($conn->query($sql) === TRUE) {
+                              echo "Record updated successfully";
+                            } else {
+                              echo "Error updating record: " . $conn->error;
+                            }
+                            
+                            $conn->close();
+                            
+                        }
+                    }
+        ?>
         
         <!-- box to add new todo -->
         
@@ -108,7 +171,7 @@
                             echo '</div>';
                              echo '<div id = "todo_id">' . $row['id'];
                             echo '</div>';
-                            echo '<div id = "todo_status">' . ' in progress';
+                            echo '<div id = "todo_status">' .  $row['progress'];
                             echo '</div>';
                         echo '</div>';
                         

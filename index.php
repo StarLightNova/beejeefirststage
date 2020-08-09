@@ -40,11 +40,11 @@
         <!-- box to add new todo -->
         
         <div class = "Main_adder"> 
-            <form method='post'>
-                <input type="text" placeholder = "Enter your name">
-                <input type="email" placeholder= "email">
-                <input type="text" placeholder = "What do you want to do?">
-                <input type="submit" value = "add">
+            <form method='post' action='database_manager.php'>
+                <input type="text" placeholder = "Enter your name" name = "name">
+                <input type="email" placeholder= "email" name = "email">
+                <input type="text" placeholder = "What do you want to do?" name = "content">
+                <input type="submit" value = "add" name = 'submit'>
             </form>
         
         </div>

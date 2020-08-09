@@ -1,3 +1,6 @@
+<?php
+    $myList = array();
+?>
 <html>
 
     <head>
@@ -14,7 +17,7 @@
            }
            
            
-           #todo_author_text, .todo_container, #todo_author, #todo_author_email, #todo_status{
+           #todo_author_text, .todo_container, #todo_author, #todo_author_email, #todo_status, input{
                 padding: 10px;
                 margin: 5px;
            }
@@ -34,6 +37,18 @@
             </div>
         </div>
         
+        <!-- box to add new todo -->
+        
+        <div class = "Main_adder"> 
+            <form method='post'>
+                <input type="text" placeholder = "Enter your name">
+                <input type="email" placeholder= "email">
+                <input type="text" placeholder = "What do you want to do?">
+                <input type="submit" value = "add">
+            </form>
+        
+        </div>
+        
         <!-- In this boxes I save each todo list -->
         <div class = "Main_Container">
         
@@ -47,7 +62,7 @@
                             echo '</div>';
                             echo '<div id = "todo_author_email">' . ' test@test.com';
                             echo '</div>';
-                            echo '<div id = "todo_status">' . ' active';
+                            echo '<div id = "todo_status">' . ' in progress';
                             echo '</div>';
                         echo '</div>';
                         

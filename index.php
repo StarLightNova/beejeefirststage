@@ -17,7 +17,7 @@
            }
            
            
-           #todo_author_text, .todo_container, #todo_author, #todo_author_email, #todo_status, #todo_id, input{
+           #todo_author_text, .todo_container, #todo_author, #todo_author_email, #todo_status, #todo_id, input, #sort_by_name, #sort_by_email{
                 padding: 10px;
                 margin: 5px;
            }
@@ -50,6 +50,14 @@
                 <input type="text" placeholder = "What do you want to do?" name = "content">
                 <input type="submit" value = "add" name = 'submit'>
             </form>
+            
+            <form method='post' action="index.php">
+                <input type="radio" id="sort_by_name" name="sort" value="name">
+                <label for="name_sort">Sort by name</label>
+                <input type="radio" id="sort_by_email" name="sort" value="email">
+                <label for="email_sort">Sort by email</label>
+                <input type="submit" value = "sort" name = 'submit'>
+            </form>
         
         </div>
         
@@ -57,7 +65,16 @@
         <div class = "Main_Container">
         
             <?php
-                               
+            
+                $sort_by = "ORDER BY ";
+                if(isset($_POST['submit'])){
+                    $sort_by = $sort_by . $_POST['sort'] . " ASC";
+                }
+                else{
+                    $sort_by = "ORDER BY ID ASC";
+                }
+                
+                    
                 if (isset($_GET['pageno'])) {
                  $pageno = $_GET['pageno'];
                 } 
@@ -79,7 +96,7 @@
                 $total_rows = mysqli_fetch_array($result)[0];
                 $total_pages = ceil($total_rows / $no_of_records_per_page);
         
-                $sql = "SELECT * FROM todos LIMIT $offset, $no_of_records_per_page";
+                $sql = "SELECT * FROM todos $sort_by LIMIT $offset, $no_of_records_per_page";
                 $res_data = mysqli_query($conn,$sql);
                 while($row = mysqli_fetch_array($res_data)){
                     echo '<div class = "todo_container" style="border: 0.5px solid grey;">';

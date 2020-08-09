@@ -1,6 +1,3 @@
-<?php
-    $myList = array();
-?>
 <html>
 
     <head>

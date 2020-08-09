@@ -2,6 +2,9 @@
 
     <head>
         <title>Main Page</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         
         <style>
            #Main_Title{
@@ -50,24 +53,31 @@
         <div class = "Main_Container">
         
             <?php
-            
-                // Printing my database
-                $servername   = "rudy.zzz.com.ua";
-                $login        = "starlightnova";
-                $password     = "Admin123";
-                $db           = 'starlightnova';
-                
-                $conn = new mysqli($servername, $login, $password, $db);
-                
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
+                               
+                if (isset($_GET['pageno'])) {
+                 $pageno = $_GET['pageno'];
+                } 
+                else {
+                    $pageno = 1;
                 }
-                
-                $sql = "SELECT id, name, email, content FROM todos";
-                $result = $conn->query($sql);
-                
-                if ($result->num_rows > 0) {
-                  while($row = $result->fetch_assoc()) {
+                $no_of_records_per_page = 3;
+                $offset = ($pageno-1) * $no_of_records_per_page;
+        
+                $conn=mysqli_connect("rudy.zzz.com.ua","starlightnova","Admin123","starlightnova");
+                // Check connection
+                if (mysqli_connect_errno()){
+                    echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                    die();
+                }
+        
+                $total_pages_sql = "SELECT COUNT(*) FROM todos";
+                $result = mysqli_query($conn,$total_pages_sql);
+                $total_rows = mysqli_fetch_array($result)[0];
+                $total_pages = ceil($total_rows / $no_of_records_per_page);
+        
+                $sql = "SELECT * FROM todos LIMIT $offset, $no_of_records_per_page";
+                $res_data = mysqli_query($conn,$sql);
+                while($row = mysqli_fetch_array($res_data)){
                     echo '<div class = "todo_container" style="border: 0.5px solid grey;">';
                         echo '<div class = "todo_author_info">';
                             echo '<div id = "todo_author">' . $row['name'];
@@ -86,33 +96,21 @@
                         echo '</div>';
                         
                     echo '</div>';
-                  }
-                } else {
-                  echo "0 results";
                 }
-                $conn->close();
+                mysqli_close($conn);
 
             ?>
             
-           <!-- 
-           <div class = "todo_container">
-                <div class = "todo_author_info">
-                    <div id = "todo_author">
-                        John
-                    </div>
-                    <div id = "todo_author_email">
-                            email@test.com
-                        </div> 
-                    <div id = "todo_status">
-                        status
-                    </div>
-                </div>
-                
-                <div id = "todo_author_text">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed orci tortor, elementum eget lorem vel, pulvinar commodo nulla. Etiam varius, metus nec ullamcorper tincidunt, urna velit semper nibh, rutrum dignissim odio metus non tellus. Mauris ut dui augue. Nam justo ligula, auctor ac cursus sit amet, sollicitudin quis nulla. Aliquam porta metus justo, non fermentum tellus efficitur ut. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nulla at ex eget mi eleifend tempus at vel augue.
-                </div>
-            </div> 
-            -->
+            <ul class="pagination">
+            <li><a href="?pageno=1">First</a></li>
+            <li class="<?php if($pageno <= 1){ echo 'disabled'; } ?>">
+                <a href="<?php if($pageno <= 1){ echo '#'; } else { echo "?pageno=".($pageno - 1); } ?>">Prev</a>
+            </li>
+            <li class="<?php if($pageno >= $total_pages){ echo 'disabled'; } ?>">
+                <a href="<?php if($pageno >= $total_pages){ echo '#'; } else { echo "?pageno=".($pageno + 1); } ?>">Next</a>
+                </li>
+                <li><a href="?pageno=<?php echo $total_pages; ?>">Last</a></li>
+            </ul>
             
         </div>
         
